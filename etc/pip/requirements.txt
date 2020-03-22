@@ -1,9 +1,12 @@
 AWSIoTPythonSDK==1.4.8
 certifi==2019.11.28
 chardet==3.0.4
+docker==4.2.0
 idna==2.9
 marshmallow==3.5.1
 psutil==5.7.0
 requests==2.23.0
+six==1.14.0
 supervisor==4.1.0
 urllib3==1.25.8
+websocket-client==0.57.0
