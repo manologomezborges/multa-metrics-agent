@@ -2,7 +2,9 @@ import os
 
 
 DEVICE_NAME = os.environ.get("DEVICE_NAME")
-DEVICE_TYPE = os.environ.get("DEVICE_TYPE", "120")
-ACCOUNT_TOKEN = os.environ.get("ACCOUNT_TOKEN")
+DEVICE_TYPE = os.environ.get("DEVICE_TYPE", os.environ.get("DEFAULT_DEVICE_TYPE", "BASIC"))  # DEFINE DEFAULTIN DOCKERFILE
+DEVICE_TYPE_ATTRIBUTES = os.environ.get("DEVICE_TYPE_ATTRIBUTES", {})
+ACCOUNT_TOKEN = os.environ.get("ACCOUNT_TOKEN", "test")
 
-DEVICE_SYNC_TIME = os.environ.get("ACCOUNT_TOKEN")
+DEVICE_SYNC_TIME = os.environ.get("DEVICE_SYNC_TIME")
+DEVICE_CONFIGURATION_URL = os.environ.get("DEVICE_CONFIGURATION_URL")

@@ -1,8 +1,9 @@
 import schedule
 import time
 
-from .handlers.utils import Logger
-from .settings.app import DEVICE_SYNC_TIME
+from src.handlers.registration_handler import RegistrationHandler
+from src.handlers.utils import Logger
+from src.settings.app import DEVICE_SYNC_TIME
 
 logs_handler = Logger()
 logger = logs_handler.get_logger()
@@ -19,6 +20,14 @@ if __name__ == "__main__":
     schedule.every(int(DEVICE_SYNC_TIME)).seconds.do(test_job)
 
     # TODO: Add Registration handler
+    registration_status = RegistrationHandler.register()
+    while registration_status is None:
+        logger.error("Error registering device... Trying again in 1 minute...")
+        time.sleep(60)
+        registration_status = RegistrationHandler.register()
+
+    logger.info(f"Registration was: {registration_status}")
+
     # TODO: Add MQTT Connection, Publish and Subscription handler
     # TODO: Add other scheduled functions to collect hardware and send them to the cloud using MQTT
 

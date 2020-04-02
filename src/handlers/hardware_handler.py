@@ -12,7 +12,59 @@ logs_handler = Logger()
 logger = logs_handler.get_logger()
 
 
+def get_system_metrics():
+    # TODO: CALL HWAnalyzer CLASS AND RETURN DICTIONARY WITH SYSTEM DATA WHERE EACH PARAMETER IS A KEY OF THE DICTIONARY
+    """
+    :return: {
+        "ram": {
+            "current": "",
+            "total": "",
+            "percentage": "",
+            "status": bool (True || False)
+        },
+        "cpu": {
+            "current": "",
+            "total": "",
+            "percentage": "",
+            "status": bool (True || False)
+        },
+        "temperature": {
+            "current": "",
+            "total": "",
+            "percentage": "",
+            "status": bool (True || False)
+        },
+        "cpu": {
+            "current": "",
+            "total": "",
+            "percentage": "",
+            "status": bool (True || False)
+        },
+        "bandwidth": {
+            "current": "",
+            "status": bool (True || False)
+        },
+        "boot": {
+            "status": bool (True || False)
+        }
+    }
+    """
+    pass
+
+
+def get_systems_periferics_status():
+    # TODO: GET SYSTEM INFO FOR BATTERY, FANS FROM PSUTIL AND CHECK IF OTHER USEFUL INFO EXISTS
+    pass
+
+
+def get_processes_metrics():
+    # TODO: GET PROCESSES METRICS AND METRICS ABOUT BOOT TIME
+    pass
+
+
 class HWAnalyzer:
+    # TODO: DEFINE THRESHOLDS (RAM, CPU, HDD, TEMP) AS DIFFERENT ENVIRONMENT VARIABLES
+    # TODO: REMOVE bytes2human FUNCTION FROM EVERY CALL, SO DATA IS ACCURATE AND PROCESSABLE
     def __init__(self):
         try:
             self.ram_info = psutil.virtual_memory()
