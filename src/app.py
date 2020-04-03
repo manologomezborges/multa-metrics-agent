@@ -1,4 +1,5 @@
 import schedule
+import sys
 import time
 
 from src.handlers.registration_handler import RegistrationHandler
@@ -18,15 +19,28 @@ if __name__ == "__main__":
 
     # Example function
     schedule.every(int(DEVICE_SYNC_TIME)).seconds.do(test_job)
+    try:
+        while True:
+            registration_data = RegistrationHandler.register()
+            if isinstance(registration_data, dict):
+                credentials_status = RegistrationHandler.save_credentials(
+                    credentials_dictionary=registration_data["certificates"], root_ca=registration_data["rootCA"]
+                )
+                if credentials_status is False:
+                    RegistrationHandler.clean_credentials()
+                    raise RuntimeError
+                else:
+                    logger.info("Breaking registration loop, registration was successful!")
+                    break
+            elif registration_data is False:
+                logger.error("Breaking registration loop, registration failed!")
+                break
+            else:
+                time.sleep(60)
 
-    # TODO: Add Registration handler
-    registration_status = RegistrationHandler.register()
-    while registration_status is None:
-        logger.error("Error registering device... Trying again in 1 minute...")
-        time.sleep(60)
-        registration_status = RegistrationHandler.register()
-
-    logger.info(f"Registration was: {registration_status}")
+    except RuntimeError:
+        logger.error("Error registering and saving credentials...")
+        sys.exit(1)
 
     # TODO: Add MQTT Connection, Publish and Subscription handler
     # TODO: Add other scheduled functions to collect hardware and send them to the cloud using MQTT
