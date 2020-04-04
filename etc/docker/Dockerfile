@@ -5,7 +5,7 @@ RUN set -ex \
 
 
 RUN set -ex \
-    && apt-get install python-dbus
+    && apt-get install -y python-dbus
 
 RUN set -ex \
     && pythonDeps=" \
@@ -35,4 +35,4 @@ ADD etc/files/supervisor.conf    /etc/supervisor/conf.d/
 
 # HEALTHCHECK --start-period=120s --interval=60s --retries=1 CMD curl --fail http://127.0.0.1:5000/api/ || exit 1
 
-CMD ["bash", "/src/start.sh"]
+CMD ["bash", "/src/src/start.sh"]

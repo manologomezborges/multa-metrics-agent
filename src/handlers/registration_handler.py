@@ -67,5 +67,11 @@ class RegistrationHandler:
             return True
 
     @staticmethod
+    def check_credentials():
+        # TODO: ADD CREDENTIALS CHECKS BEFORE REGISTERING
+        return False
+
+    @staticmethod
     def clean_credentials():
+        # TODO: ADD CREDENTIALS REMOVAL IF PROCESS EXITS UNEXPECTEDLY
         pass
