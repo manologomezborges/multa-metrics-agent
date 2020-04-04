@@ -2,7 +2,7 @@ import schedule
 import sys
 import time
 
-from src.handlers.registration_handler import RegistrationHandler
+from src.handlers.registration_handler import RegistrationHandler, register_device
 from src.handlers.utils import Logger
 from src.settings.app import DEVICE_SYNC_TIME
 
@@ -22,23 +22,7 @@ if __name__ == "__main__":
     try:
         if RegistrationHandler.check_credentials() is False:
             logger.info("Unable to find device credentials, starting registration...")
-            while True:
-                registration_data = RegistrationHandler.register()
-                if isinstance(registration_data, dict):
-                    credentials_status = RegistrationHandler.save_credentials(
-                        credentials_dictionary=registration_data["certificates"], root_ca=registration_data["rootCA"]
-                    )
-                    if credentials_status is False:
-                        RegistrationHandler.clean_credentials()
-                        raise RuntimeError
-                    else:
-                        logger.info("Registration was successful!")
-                        break
-                elif registration_data is False:
-                    logger.error("Breaking registration loop, registration failed!")
-                    break
-                else:
-                    time.sleep(60)
+            register_device()
         else:
             logger.info("Agent is already registered")
 

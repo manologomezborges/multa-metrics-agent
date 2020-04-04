@@ -1,5 +1,7 @@
 import json
+import os
 import requests
+import time
 import traceback
 
 from src.settings.app import ACCOUNT_TOKEN, DEVICE_CONFIGURATION_URL, DEVICE_NAME, DEVICE_TYPE, DEVICE_TYPE_ATTRIBUTES
@@ -9,6 +11,26 @@ from src.handlers.utils import Logger
 
 logs_handler = Logger()
 logger = logs_handler.get_logger()
+
+
+def register_device():
+    while True:
+        registration_data = RegistrationHandler.register()
+        if isinstance(registration_data, dict):
+            credentials_status = RegistrationHandler.save_credentials(
+                credentials_dictionary=registration_data["certificates"], root_ca=registration_data["rootCA"]
+            )
+            if credentials_status is False:
+                RegistrationHandler.clean_credentials()
+                raise RuntimeError
+            else:
+                logger.info("Registration was successful!")
+                break
+        elif registration_data is False:
+            logger.error("Breaking registration loop, registration failed!")
+            break
+        else:
+            time.sleep(60)
 
 
 class RegistrationHandler:
@@ -69,9 +91,35 @@ class RegistrationHandler:
     @staticmethod
     def check_credentials():
         # TODO: ADD CREDENTIALS CHECKS BEFORE REGISTERING
-        return False
+        if (
+            os.path.isfile(DEVICE_PEM_FILE)
+            and os.path.isfile(DEVICE_PRIVATE_KEY_FILE)
+            and os.path.isfile(DEVICE_PUBLIC_KEY_FILE)
+            and os.path.isfile(ROOTCA_CERTIFICATE_FILE)
+        ):
+            return True
+        else:
+            return False
 
     @staticmethod
     def clean_credentials():
         # TODO: ADD CREDENTIALS REMOVAL IF PROCESS EXITS UNEXPECTEDLY
-        pass
+        try:
+            os.remove(DEVICE_PEM_FILE)
+        except Exception:
+            logger.error(traceback.format_exc())
+
+        try:
+            os.remove(DEVICE_PRIVATE_KEY_FILE)
+        except Exception:
+            logger.error(traceback.format_exc())
+
+        try:
+            os.remove(DEVICE_PUBLIC_KEY_FILE)
+        except Exception:
+            logger.error(traceback.format_exc())
+
+        try:
+            os.remove(ROOTCA_CERTIFICATE_FILE)
+        except Exception:
+            logger.error(traceback.format_exc())
